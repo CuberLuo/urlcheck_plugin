@@ -1,0 +1,111 @@
+#overlay_urlcheck {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(30px);
+  box-shadow: 2px 2px 2px #00000051;
+  background-color: #ffffff25;
+  z-index: 9999; /* 设置 z-index 使其位于其他元素之上 */
+}
+
+#popup_urlcheck {
+  display: flex;
+  flex-direction: column;
+  justify-content: center !important;
+  position: absolute;
+  width: 380px;
+  height: 54px;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#continue_urlcheck {
+  width: 180px !important;
+  height: 32px !important;
+  background-color: #fdf6ec !important;
+  color: #eaaf58 !important;
+  border: 1px solid #f3d19e !important;
+  border-radius: 4px !important;
+  font-size: 20px !important;
+}
+
+#continue_urlcheck:hover {
+  cursor: pointer !important; /* 鼠标移动到上面变成小手 */
+  background-color: #e6a23c !important; /* 背景颜色加深 */
+  color: #ffffff !important;
+}
+#checking_paragraph_urlcheck {
+  font-size: 30px;
+}
+#checked_paragraph0_urlcheck,
+#checked_paragraph1_urlcheck {
+  font-size: 25px;
+}
+#checked_paragraph2_urlcheck {
+  font-size: 20px;
+}
+#checking_paragraph_urlcheck,
+#checked_paragraph0_urlcheck,
+#checked_paragraph1_urlcheck,
+#checked_paragraph2_urlcheck,
+#continue_urlcheck,
+#paragraph_time_urlcheck {
+  align-self: center;
+}
+
+#checked_paragraph1_urlcheck,
+#checked_paragraph2_urlcheck,
+#continue_urlcheck {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#pass_img,
+#fail_img {
+  width: 50px;
+  height: 50px;
+  float: left;
+  padding-right: 20px;
+}
+
+#result_div_urlcheck {
+  display: flex;
+  justify-content: center;
+}
+
+.chrome-plugin-simple-tip {
+  z-index: 99999 !important;
+  background: linear-gradient(
+    rgb(249, 207, 198),
+    rgb(228, 60, 47),
+    rgb(233, 66, 66)
+  ) !important;
+  animation-name: slideInRight !important;
+  animation-duration: 3s !important;
+  right: 20px !important;
+  left: auto !important;
+  max-width: 300px !important;
+  transition: top 1s ease 0s !important;
+  /* transition: none !important; */
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

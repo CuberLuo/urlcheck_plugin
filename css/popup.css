@@ -1,0 +1,88 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #dfe3f1;
+  padding: 20px 50px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 5px;
+  color: rgb(48, 53, 71);
+}
+.text {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(94, 94, 94);
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 30px 30px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Source Han Serif';
+}
+.logo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+.switch {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.switch input[type='checkbox'] {
+  appearance: none;
+  background-color: #c6c6c6;
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  transition: background-color 0.2s;
+  margin-right: 10px;
+}
+.switch input[type='checkbox']:checked {
+  background-color: #5850b0;
+}
+.switch input[type='checkbox']:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+.switch input[type='checkbox']:checked:before {
+  transform: translateX(20px);
+}
+
+/* 新增帮助按钮样式 */
+.help-button {
+  background-color: #5850b0;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s; /* 添加过渡效果 */
+}
+
+/* 鼠标悬停时修改样式 */
+.help-button:hover {
+  background-color: #333;
+}
+
+/* 点击后修改样式 */
+.help-button.clicked {
+  background-color: #c6c6c6;
+  color: #333;
+}

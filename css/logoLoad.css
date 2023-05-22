@@ -1,0 +1,37 @@
+.wrapper_urlcheck {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 230px;
+  height: 230px;
+}
+.container_urlcheck,
+.logo-img_urlcheck {
+  position: absolute;
+}
+
+.container_urlcheck {
+  width: 214px;
+  height: 214px;
+  border-radius: 50%;
+
+  border-top: 8px solid #57d6fd;
+  border-left: 8px solid #57d6fd;
+  border-bottom: 8px solid #57d6fd;
+  border-right: 8px solid transparent;
+  animation: run 1.5s ease infinite;
+}
+.logo-img_urlcheck {
+  width: 230px;
+  height: 230px;
+  /* background-image: url('chrome-extension://__EXTENSION_ID__/img/dun.png'); */
+  background-size: 153.7px 174.6px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+@keyframes run {
+  to {
+    transform: rotate(1turn);
+  }
+}

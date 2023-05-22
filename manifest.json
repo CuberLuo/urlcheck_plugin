@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+  "name": "网安宝反诈插件",
+  "version": "1.0.0",
+  "description": "阻拦恶意网站...",
+  "icons": {
+    "16": "img/logo.png",
+    "32": "img/logo.png",
+    "48": "img/logo.png",
+    "128": "img/logo.png"
+  },
+  "browser_action": {
+    // 图标悬停时的标题
+    "default_title": "网安宝反诈插件",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./js/content.js", "./js/dialog.js"],
+      "css": ["./css/overlay.css", "./css/logoLoad.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    "img/dun.png",
+    "img/checkImg/yes.png",
+    "img/checkImg/no.png"
+  ],
+
+  "background": {
+    "persistent": true,
+    "scripts": ["./js/background.js"]
+  },
+
+  // "permissions": ["activeTab", "tabs", "https://*/*", "http://*/*"]
+  "permissions": ["activeTab", "tabs", "storage", "notifications"]
+}
