@@ -70,6 +70,11 @@ function tip() {
   ele.className = 'chrome-plugin-simple-tip'
   ele.style.top = '20px'
   ele.innerHTML = `
+  <img
+    id="tipLogo_urlcheck"
+    src="${chrome.runtime.getURL('img/logo.png')}"
+    alt="logo"
+  />
   <div id="feedbackLine1_urlcheck">请您为我们的插件准确性提供反馈😉</div>
   <div id="feedbackLine2_urlcheck">
     <div id="likeBox_urlcheck">

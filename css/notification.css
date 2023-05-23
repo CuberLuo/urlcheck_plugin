@@ -75,3 +75,11 @@
   -webkit-text-size-adjust: none;
   color: #9eadb6;
 }
+#tipLogo_urlcheck {
+  width: 80px !important;
+  height: 80px !important;
+}
+#feedbackLine1_urlcheck,
+#tipLogo_urlcheck {
+  align-self: center;
+}
