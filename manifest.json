@@ -1,15 +1,15 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "网安宝反诈插件",
   "version": "1.0.0",
-  "description": "阻拦恶意网站...",
+  "description": "阻拦恶意网站,为用户的安全上网提供保障!",
   "icons": {
     "16": "img/logo.png",
     "32": "img/logo.png",
     "48": "img/logo.png",
     "128": "img/logo.png"
   },
-  "browser_action": {
+  "action": {
     // 图标悬停时的标题
     "default_title": "网安宝反诈插件",
     "default_popup": "popup.html"
@@ -28,30 +28,25 @@
     }
   ],
   "web_accessible_resources": [
-    "img/dun.png",
-    "img/logo.png",
-    "img/checkImg/yes.png",
-    "img/checkImg/no.png",
-    "img/feedback/like.svg",
-    "img/feedback/dislike.svg",
-    "img/feedback/like_activate.svg",
-    "img/feedback/dislike_activate.svg",
-    "img/feedback/close.svg"
+    {
+      "resources": [
+        "img/dun.png",
+        "img/logo.png",
+        "img/checkImg/yes.png",
+        "img/checkImg/no.png",
+        "img/feedback/like.svg",
+        "img/feedback/dislike.svg",
+        "img/feedback/like_activate.svg",
+        "img/feedback/dislike_activate.svg",
+        "img/feedback/close.svg"
+      ],
+      "matches": ["<all_urls>"]
+    }
   ],
 
   "background": {
-    "persistent": true,
-    "scripts": ["./js/background.js"]
+    "service_worker": "background.js"
   },
 
-  "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "<all_urls>",
-    "activeTab",
-    "tabs",
-    "storage",
-    "notifications"
-  ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "permissions": ["activeTab", "tabs", "storage", "notifications"]
 }
