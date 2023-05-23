@@ -12,10 +12,10 @@
 }
 
 .container_urlcheck {
-  width: 214px;
-  height: 214px;
+  width: 214px !important;
+  height: 214px !important;
   border-radius: 50%;
-
+  box-sizing: content-box !important;
   border-top: 8px solid #57d6fd;
   border-left: 8px solid #57d6fd;
   border-bottom: 8px solid #57d6fd;

@@ -1,3 +1,6 @@
+body {
+  display: none !important;
+}
 #overlay_urlcheck {
   position: fixed;
   top: 0;
@@ -15,8 +18,8 @@
   flex-direction: column;
   justify-content: center !important;
   position: absolute;
-  width: 380px;
-  height: 54px;
+  width: 380px !important;
+  height: 54px !important;
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -24,7 +27,8 @@
   font-size: large;
   font-weight: bold;
   background-color: rgba(255, 255, 255, 0);
-  padding: 20px;
+  padding: 20px !important;
+  box-sizing: content-box !important;
   border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -37,6 +41,8 @@
   border: 1px solid #f3d19e !important;
   border-radius: 4px !important;
   font-size: 20px !important;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
 }
 
 #continue_urlcheck:hover {
@@ -72,10 +78,11 @@
 
 #pass_img,
 #fail_img {
-  width: 50px;
-  height: 50px;
-  float: left;
-  padding-right: 20px;
+  width: 50px !important;
+  height: 50px !important;
+  float: left !important;
+  padding-right: 20px !important;
+  box-sizing: content-box !important;
 }
 
 #result_div_urlcheck {

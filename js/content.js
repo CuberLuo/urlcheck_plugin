@@ -1,6 +1,15 @@
 chrome.storage.sync.get('checkbox_checked', function (data) {
+  console.log(data.checkbox_checked)
   if (data.checkbox_checked === true) {
     monitorDocument()
+  } else {
+    document.addEventListener('readystatechange', function () {
+      if (document.readyState === 'interactive') {
+        document
+          .querySelector('body')
+          .style.setProperty('display', 'block', 'important')
+      }
+    })
   }
 })
 const monitorDocument = () => {
@@ -11,11 +20,11 @@ const monitorDocument = () => {
         '<div id="overlay_urlcheck"></div>'
       )
       addOverlay()
-      // body.style.visibility = 'visible'
+      // 使body可见
+      document
+        .querySelector('body')
+        .style.setProperty('display', 'block', 'important')
     }
-    // else if (document.readyState === 'loading') {
-    //   body.style.visibility = 'hidden'
-    // }
   })
 }
 
@@ -250,8 +259,8 @@ const websiteCheckRequest = () => {
             document.createTextNode('该网站疑似为诈骗网站 置信度: 88.8%')
           )
           popup.appendChild(paragraph2)
-          popup.style.height = '150px'
-          popup.style.top = '65%'
+          popup.style.setProperty('height', '150px', 'important')
+          popup.style.setProperty('top', '65%', 'important')
           const btn = document.createElement('button')
           btn.id = 'continue_urlcheck'
           // 设置按钮文本

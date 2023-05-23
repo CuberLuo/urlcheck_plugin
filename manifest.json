@@ -42,6 +42,14 @@
     "scripts": ["./js/background.js"]
   },
 
-  // "permissions": ["activeTab", "tabs", "https://*/*", "http://*/*"]
-  "permissions": ["activeTab", "tabs", "storage", "notifications"]
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>",
+    "activeTab",
+    "tabs",
+    "storage",
+    "notifications"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

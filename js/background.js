@@ -4,9 +4,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'fetch_data') {
     if (request.url !== 'https://www.baidu.com/') {
       request.url = ''
-      // setUnsafeBadge()
-    } else {
-      // setSafeBadge()
     }
 
     let url = `http://mryb.zjut.edu.cn/htk/baseInfo/getDingDingConfig?url=${request.url}`
@@ -32,13 +29,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     return true
   }
 })
-
-chrome.tabs.onUpdated.addListener(updateBadge)
-chrome.tabs.onActivated.addListener(updateBadge)
-
-function updateBadge() {
-  console.log('123!')
-}
 
 function setSafeBadge() {
   chrome.browserAction.setBadgeText({ text: '安全' })
