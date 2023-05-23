@@ -55,36 +55,143 @@ const addOverlay = () => {
   websiteCheckRequest()
 }
 
-var tipCount = 0
 // 简单的消息通知
-function tip(info) {
-  info = info || ''
+function tip() {
   var ele = document.createElement('div')
   ele.className = 'chrome-plugin-simple-tip'
-  ele.style.top = tipCount * 70 + 20 + 'px'
-  ele.innerHTML = `<div>${info}</div>`
+  ele.style.top = '20px'
+  ele.innerHTML = `
+  <div id="feedbackLine1_urlcheck">请您为我们的插件准确性提供反馈😉</div>
+  <div id="feedbackLine2_urlcheck">
+    <div id="likeBox_urlcheck">
+      <img
+        id="feedbackLikeSvg_urlcheck"
+        class="feedbackSvg_urlcheck"
+        src="${chrome.runtime.getURL('img/feedback/like.svg')}"
+        alt="like"
+      />
+      <span id="likeText_urlcheck"> 赞 </span>
+    </div>
+    <span id="split_urlcheck"></span>
+    <div id="dislikeBox_urlcheck">
+      <img
+        id="feedbackDislikeSvg_urlcheck"
+        class="feedbackSvg_urlcheck"
+        src="${chrome.runtime.getURL('img/feedback/dislike.svg')}"
+        alt="like"
+      />
+      <span id="dislikeText_urlcheck">踩</span>
+    </div>
+  </div>
+  `
   document.body.appendChild(ele)
   ele.classList.add('animated')
-  tipCount++
+  var hasClickLike = false
+  var hasClickDislike = false
+  var likeBox = document.getElementById('likeBox_urlcheck')
+  var likeSvg = document.getElementById('feedbackLikeSvg_urlcheck')
+  var likeText = document.getElementById('likeText_urlcheck')
+  var dislikeBox = document.getElementById('dislikeBox_urlcheck')
+  var dislikeSvg = document.getElementById('feedbackDislikeSvg_urlcheck')
+  var dislikeText = document.getElementById('dislikeText_urlcheck')
+  var splitSide = document.getElementById('split_urlcheck')
+  var feedbackLine = document.getElementById('feedbackLine2_urlcheck')
+  // 添加鼠标移入事件监听
+  likeBox.addEventListener('mouseenter', function () {
+    if (!hasClickDislike) {
+      likeSvg.src = chrome.runtime.getURL('img/feedback/like_activate.svg')
+      this.style.cursor = 'pointer'
+      likeText.style.color = '#1afa29'
+      feedbackLine.style.border = '2px solid #1afa29'
+    }
+  })
+
+  // 添加鼠标移出事件监听
+  likeBox.addEventListener('mouseleave', function () {
+    if (!hasClickLike && !hasClickDislike) {
+      likeSvg.src = chrome.runtime.getURL('img/feedback/like.svg')
+      likeText.style.color = '#7a8f9a'
+      feedbackLine.style.border = '2px solid #dae0e4'
+    }
+  })
+
+  likeBox.addEventListener('click', function () {
+    if (!hasClickDislike) {
+      hasClickLike = true
+      dislikeBox.classList.add('animate__animated', 'animate__fadeOut')
+      splitSide.classList.add('animate__animated', 'animate__fadeOut')
+
+      // 监听动画结束事件
+      dislikeBox.addEventListener('animationend', function () {
+        // 移除元素
+        feedbackLine.removeChild(dislikeBox)
+        feedbackLine.removeChild(splitSide)
+        likeBox.classList.add('animate__animated', 'animate__heartBeat')
+
+        setTimeout(() => {
+          ele.style.top = '-100px'
+          setTimeout(() => {
+            ele.remove()
+          }, 300)
+        }, 2000)
+      })
+
+      feedbackLine.style.border = '2px solid #1afa29'
+    }
+  })
+
+  // 添加鼠标移入事件监听
+  dislikeBox.addEventListener('mouseenter', function () {
+    if (!hasClickLike) {
+      dislikeSvg.src = chrome.runtime.getURL(
+        'img/feedback/dislike_activate.svg'
+      )
+      this.style.cursor = 'pointer'
+      dislikeText.style.color = '#d81e06'
+      feedbackLine.style.border = '2px solid #d81e06'
+    }
+  })
+
+  // 添加鼠标移出事件监听
+  dislikeBox.addEventListener('mouseleave', function () {
+    if (!hasClickLike && !hasClickDislike) {
+      dislikeSvg.src = chrome.runtime.getURL('img/feedback/dislike.svg')
+      dislikeText.style.color = '#7a8f9a'
+      feedbackLine.style.border = '2px solid #dae0e4'
+    }
+  })
+
+  dislikeBox.addEventListener('click', function () {
+    if (!hasClickLike) {
+      hasClickDislike = true
+      likeBox.classList.add('animate__animated', 'animate__fadeOut')
+      splitSide.classList.add('animate__animated', 'animate__fadeOut')
+
+      // 监听动画结束事件
+      likeBox.addEventListener('animationend', function () {
+        // 移除元素
+        feedbackLine.removeChild(likeBox)
+        feedbackLine.removeChild(splitSide)
+        dislikeBox.classList.add('animate__animated', 'animate__heartBeat')
+        setTimeout(() => {
+          ele.style.top = '-100px'
+          setTimeout(() => {
+            ele.remove()
+          }, 300)
+        }, 2000)
+      })
+      feedbackLine.style.border = '2px solid #d81e06'
+    }
+  })
+
+  // 15后反馈面板消失
   setTimeout(() => {
     ele.style.top = '-100px'
     setTimeout(() => {
       ele.remove()
-      tipCount--
     }, 300)
-  }, 10000)
+  }, 15000)
 }
-
-window.addEventListener(
-  'message',
-  function (e) {
-    console.log('收到消息：', e.data)
-    if (e.data && e.data.cmd == 'message') {
-      tip(e.data.data)
-    }
-  },
-  false
-)
 
 const websiteCheckRequest = () => {
   var currentUrl = window.location.href
@@ -118,10 +225,7 @@ const websiteCheckRequest = () => {
           popup.appendChild(checkedResultDiv)
           setTimeout(() => {
             document.body.removeChild(overlay)
-            window.postMessage(
-              { cmd: 'message', data: '点击网安宝反诈插件为我们提供反馈😉' },
-              '*'
-            )
+            tip()
           }, 1000)
         } else {
           setBorderOver('#e63f32')
@@ -146,7 +250,8 @@ const websiteCheckRequest = () => {
             document.createTextNode('该网站疑似为诈骗网站 置信度: 88.8%')
           )
           popup.appendChild(paragraph2)
-          popup.style.height = '120px'
+          popup.style.height = '150px'
+          popup.style.top = '65%'
           const btn = document.createElement('button')
           btn.id = 'continue_urlcheck'
           // 设置按钮文本
@@ -178,10 +283,7 @@ const websiteCheckRequest = () => {
           btn.addEventListener('click', function () {
             document.body.removeChild(overlay)
             clearInterval(intervalId) //继续访问则不再倒计时
-            window.postMessage(
-              { cmd: 'message', data: '点击网安宝反诈插件为我们提供反馈😉' },
-              '*'
-            )
+            tip()
           })
         }
       }, 2000)
@@ -225,11 +327,4 @@ const recoverScroll = () => {
     e.preventDefault()
   })
   document.body.style.overflow = 'auto'
-}
-
-// 获取当前选项卡ID
-function getCurrentTabId(callback) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    if (callback) callback(tabs.length ? tabs[0].id : null)
-  })
 }

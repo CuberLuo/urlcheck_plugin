@@ -17,11 +17,12 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["./js/content.js", "./js/dialog.js"],
+      "js": ["./js/content.js"],
       "css": [
         "./css/overlay.css",
         "./css/logoLoad.css",
-        "./css/notification.css"
+        "./css/notification.css",
+        "./css/animate.min.css"
       ],
       "run_at": "document_start"
     }
@@ -29,7 +30,11 @@
   "web_accessible_resources": [
     "img/dun.png",
     "img/checkImg/yes.png",
-    "img/checkImg/no.png"
+    "img/checkImg/no.png",
+    "img/feedback/like.svg",
+    "img/feedback/dislike.svg",
+    "img/feedback/like_activate.svg",
+    "img/feedback/dislike_activate.svg"
   ],
 
   "background": {
