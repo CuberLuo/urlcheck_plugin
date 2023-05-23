@@ -1,0 +1,46 @@
+.chrome-plugin-simple-tip {
+  position: fixed;
+
+  padding: 16px 10px;
+
+  color: white;
+  min-width: 150px;
+  max-width: 700px;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 16px;
+
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  /* transition: top 0.4s; */
+}
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.chrome-plugin-simple-tip {
+  z-index: 99999 !important;
+  background-image: linear-gradient(
+    to right,
+    #4facfe 0%,
+    #00f2fe 100%
+  ) !important;
+  animation-name: slideInRight !important;
+  animation-duration: 3s !important;
+  right: 20px !important;
+  left: auto !important;
+  max-width: 300px !important;
+  transition: top 1s ease 0s !important;
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

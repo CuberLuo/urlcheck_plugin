@@ -18,7 +18,11 @@
     {
       "matches": ["<all_urls>"],
       "js": ["./js/content.js", "./js/dialog.js"],
-      "css": ["./css/overlay.css", "./css/logoLoad.css"],
+      "css": [
+        "./css/overlay.css",
+        "./css/logoLoad.css",
+        "./css/notification.css"
+      ],
       "run_at": "document_start"
     }
   ],

@@ -82,30 +82,3 @@
   display: flex;
   justify-content: center;
 }
-
-.chrome-plugin-simple-tip {
-  z-index: 99999 !important;
-  background: linear-gradient(
-    rgb(249, 207, 198),
-    rgb(228, 60, 47),
-    rgb(233, 66, 66)
-  ) !important;
-  animation-name: slideInRight !important;
-  animation-duration: 3s !important;
-  right: 20px !important;
-  left: auto !important;
-  max-width: 300px !important;
-  transition: top 1s ease 0s !important;
-  /* transition: none !important; */
-}
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}

@@ -11,9 +11,6 @@ const monitorDocument = () => {
         '<div id="overlay_urlcheck"></div>'
       )
       addOverlay()
-      // new Dialog('1', '用户反馈', '网安宝插件的检测结果是否正确?', function () {
-      //   alert('被点击')
-      // })
       // body.style.visibility = 'visible'
     }
     // else if (document.readyState === 'loading') {
@@ -57,6 +54,37 @@ const addOverlay = () => {
   forbidScroll()
   websiteCheckRequest()
 }
+
+var tipCount = 0
+// 简单的消息通知
+function tip(info) {
+  info = info || ''
+  var ele = document.createElement('div')
+  ele.className = 'chrome-plugin-simple-tip'
+  ele.style.top = tipCount * 70 + 20 + 'px'
+  ele.innerHTML = `<div>${info}</div>`
+  document.body.appendChild(ele)
+  ele.classList.add('animated')
+  tipCount++
+  setTimeout(() => {
+    ele.style.top = '-100px'
+    setTimeout(() => {
+      ele.remove()
+      tipCount--
+    }, 300)
+  }, 10000)
+}
+
+window.addEventListener(
+  'message',
+  function (e) {
+    console.log('收到消息：', e.data)
+    if (e.data && e.data.cmd == 'message') {
+      tip(e.data.data)
+    }
+  },
+  false
+)
 
 const websiteCheckRequest = () => {
   var currentUrl = window.location.href
@@ -132,10 +160,6 @@ const websiteCheckRequest = () => {
             document.createTextNode('10秒后返回上一页或关闭标签页')
           paragraph_time.appendChild(time_text)
           popup.appendChild(paragraph_time)
-          window.postMessage(
-            { cmd: 'message', data: '点击网安宝反诈插件为我们提供反馈😉' },
-            '*'
-          )
           const intervalId = setInterval(() => {
             remainingTime--
             time_text.textContent = `${remainingTime}秒后返回上一页或关闭标签页`
@@ -154,6 +178,10 @@ const websiteCheckRequest = () => {
           btn.addEventListener('click', function () {
             document.body.removeChild(overlay)
             clearInterval(intervalId) //继续访问则不再倒计时
+            window.postMessage(
+              { cmd: 'message', data: '点击网安宝反诈插件为我们提供反馈😉' },
+              '*'
+            )
           })
         }
       }, 2000)
