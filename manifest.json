@@ -35,7 +35,8 @@
     "img/feedback/like.svg",
     "img/feedback/dislike.svg",
     "img/feedback/like_activate.svg",
-    "img/feedback/dislike_activate.svg"
+    "img/feedback/dislike_activate.svg",
+    "img/feedback/close.svg"
   ],
 
   "background": {

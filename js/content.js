@@ -70,6 +70,14 @@ function tip() {
   ele.className = 'chrome-plugin-simple-tip'
   ele.style.top = '20px'
   ele.innerHTML = `
+  <div id="closeTipBox_urlcheck">
+    <img
+      id="closeTip_urlcheck"
+      src="${chrome.runtime.getURL('img/feedback/close.svg')}"
+      alt="close"
+    />
+  </div>
+  
   <img
     id="tipLogo_urlcheck"
     src="${chrome.runtime.getURL('img/logo.png')}"
@@ -110,6 +118,7 @@ function tip() {
   var dislikeText = document.getElementById('dislikeText_urlcheck')
   var splitSide = document.getElementById('split_urlcheck')
   var feedbackLine = document.getElementById('feedbackLine2_urlcheck')
+  var closeBox = document.getElementById('closeTipBox_urlcheck')
   // 添加鼠标移入事件监听
   likeBox.addEventListener('mouseenter', function () {
     if (!hasClickDislike) {
@@ -197,7 +206,12 @@ function tip() {
       feedbackLine.style.border = '2px solid #d81e06'
     }
   })
-
+  closeBox.addEventListener('click', function () {
+    ele.style.top = '-100px'
+    setTimeout(() => {
+      ele.remove()
+    }, 300)
+  })
   // 15后反馈面板消失
   setTimeout(() => {
     ele.style.top = '-100px'

@@ -20,8 +20,8 @@
   z-index: 99999 !important;
   background-image: linear-gradient(
     to right,
-    #4facfe 0%,
-    #00f2fe 100%
+    #4facfe98 0%,
+    #00f2fe98 100%
   ) !important;
   animation-name: slideInRight !important;
   animation-duration: 3s !important;
@@ -89,4 +89,18 @@
   line-height: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+#closeTipBox_urlcheck {
+  display: block;
+  width: 20px;
+  height: 20px;
+  align-self: flex-end;
+}
+#closeTipBox_urlcheck:hover {
+  background-color: #ffffff75;
+  cursor: pointer;
+}
+#closeTip_urlcheck {
+  width: 20px !important;
+  height: 20px !important;
 }
