@@ -3,8 +3,8 @@
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 230px;
-  height: 230px;
+  width: 300px;
+  height: 300px;
 }
 .container_urlcheck,
 .logo-img_urlcheck {
@@ -12,25 +12,26 @@
 }
 
 .container_urlcheck {
-  width: 214px !important;
-  height: 214px !important;
+  width: 284px !important;
+  height: 284px !important;
   border-radius: 50%;
   box-sizing: content-box !important;
-  border-top: 8px solid #57d6fd;
-  border-left: 8px solid #57d6fd;
-  border-bottom: 8px solid #57d6fd;
-  border-right: 8px solid transparent;
-  animation: run 1.5s ease infinite;
+  background: linear-gradient(45deg, transparent, transparent 30%, #57d6fd);
+  animation: run_urlcheck 1.5s ease infinite;
 }
+@keyframes run_urlcheck {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .logo-img_urlcheck {
-  width: 230px;
-  height: 230px;
-  background-size: 153.7px 174.6px;
+  width: 300px;
+  height: 300px;
+  background-size: 184.4px 209.5px;
   background-repeat: no-repeat;
   background-position: center center;
-}
-@keyframes run {
-  to {
-    transform: rotate(1turn);
-  }
 }

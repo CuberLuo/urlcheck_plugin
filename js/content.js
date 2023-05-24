@@ -280,8 +280,9 @@ const setUnsafePanel = () => {
     document.createTextNode('该网站疑似为诈骗网站 置信度: 88.8%')
   )
   popup.appendChild(paragraph2)
+  // 调整popup的样式
   popup.style.setProperty('height', '150px', 'important')
-  popup.style.setProperty('top', '65%', 'important')
+  popup.style.setProperty('top', '70%', 'important')
   const btn = document.createElement('button')
   btn.id = 'continue_urlcheck'
   // 设置按钮文本
@@ -323,6 +324,9 @@ const setBorderOver = (color) => {
   container.style.animation = 'none'
   // 设置 border 样式
   container.style.border = `8px solid ${color}`
+  container.style.boxShadow = `0 0 10px ${color}, 0 0 5px ${color}, 0 0 25px ${color},
+  0 0 100px ${color}`
+  container.style.background = 'none'
 }
 
 const setPopupColor = (color) => {
