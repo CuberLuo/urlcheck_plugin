@@ -29,13 +29,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     return true
   }
 })
-
-function setSafeBadge() {
-  chrome.browserAction.setBadgeText({ text: '安全' })
-  chrome.browserAction.setBadgeBackgroundColor({ color: [0, 255, 0, 255] })
-}
-
-function setUnsafeBadge() {
-  chrome.browserAction.setBadgeText({ text: '危险' })
-  chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] })
-}

@@ -41,8 +41,6 @@ body {
   border: 1px solid #f3d19e !important;
   border-radius: 4px !important;
   font-size: 20px !important;
-  font-family: Arial, sans-serif;
-  font-weight: bold;
 }
 
 #continue_urlcheck:hover {
@@ -52,6 +50,8 @@ body {
 }
 #checking_paragraph_urlcheck {
   font-size: 30px;
+  font-family: Arial, sans-serif !important;
+  font-weight: bold !important;
 }
 #checked_paragraph0_urlcheck,
 #checked_paragraph1_urlcheck {
@@ -67,6 +67,12 @@ body {
 #continue_urlcheck,
 #paragraph_time_urlcheck {
   align-self: center;
+  font-family: Arial, sans-serif !important;
+  font-weight: bold !important;
+}
+
+#paragraph_time_urlcheck {
+  margin: 0px !important;
 }
 
 #checked_paragraph1_urlcheck,
@@ -83,6 +89,7 @@ body {
   float: left !important;
   padding-right: 20px !important;
   box-sizing: content-box !important;
+  filter: brightness(100%) !important;
 }
 
 #result_div_urlcheck {
