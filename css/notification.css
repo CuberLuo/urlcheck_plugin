@@ -53,14 +53,14 @@
   margin-top: 12px;
   border: 2px solid #dae0e4;
   border-radius: 32px;
-  width: 150px !important;
+  width: 180px !important;
   height: 40px !important;
   align-self: center;
   background-color: #ffffff;
 }
 #likeText_urlcheck,
 #dislikeText_urlcheck {
-  font-size: 24px;
+  font-size: 17px;
   color: #7a8f9a;
 }
 #split_urlcheck {

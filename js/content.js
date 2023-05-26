@@ -86,7 +86,7 @@ function tip() {
         src="${chrome.runtime.getURL('img/feedback/like.svg')}"
         alt="like"
       />
-      <span id="likeText_urlcheck"> 赞 </span>
+      <span id="likeText_urlcheck"> 信任 </span>
     </div>
     <span id="split_urlcheck"></span>
     <div id="dislikeBox_urlcheck">
@@ -96,7 +96,7 @@ function tip() {
         src="${chrome.runtime.getURL('img/feedback/dislike.svg')}"
         alt="like"
       />
-      <span id="dislikeText_urlcheck">踩</span>
+      <span id="dislikeText_urlcheck">不信任</span>
     </div>
   </div>
   `
@@ -219,42 +219,64 @@ const websiteCheckRequest = () => {
   var currentUrl = window.location.href
   console.log('当前网址 ' + currentUrl)
   const popup = document.querySelector('#popup_urlcheck')
-  const overlay = document.querySelector('#overlay_urlcheck')
+  // const overlay = document.querySelector('#overlay_urlcheck')
   // 发送消息到 background.js 文件
-  chrome.runtime.sendMessage(
+  setTimeout(() => {
+    popup.innerHTML = ''
+    // console.log(`label:${resultObj.label}  label2:${resultObj.label2}`)
+    setSafePanel()
+    // setUnsafePanel()
+  }, 2000)
+  /* chrome.runtime.sendMessage(
     { action: 'fetch_data', url: currentUrl },
     function (response) {
-      console.log(response.data)
-      jsonObj = JSON.parse(response.data)
-      setTimeout(() => {
-        popup.innerHTML = ''
-        if (jsonObj.success == true) {
-          setBorderOver('#1fd56d')
-          setPopupColor('#f3fbed')
-          recoverScroll()
-          const passImage = document.createElement('img')
-          passImage.id = 'pass_img'
-          passImage.src = chrome.runtime.getURL('img/checkImg/yes.png')
-          popup.appendChild(passImage)
-          const paragraph0 = document.createElement('p')
-          paragraph0.id = 'checked_paragraph0_urlcheck'
-          paragraph0.appendChild(document.createTextNode('网站安全性检测通过'))
-
-          const checkedResultDiv = document.createElement('div')
-          checkedResultDiv.id = 'result_div_urlcheck'
-          checkedResultDiv.appendChild(passImage)
-          checkedResultDiv.appendChild(paragraph0)
-          popup.appendChild(checkedResultDiv)
-          setTimeout(() => {
-            document.body.removeChild(overlay)
-            tip()
-          }, 1000)
-        } else {
+      // console.log(response)
+      // jsonObj = response.data
+      if (response.success === true) {
+        resultObj = response.data.data
+        console.log(resultObj)
+        setTimeout(() => {
+          popup.innerHTML = ''
+          console.log(`label:${resultObj.label}  label2:${resultObj.label2}`)
+          if (resultObj.label === 0 && resultObj.label2 === 0) {
+            setSafePanel()
+          } else {
+            setUnsafePanel()
+          }
+        }, 2000)
+      } else {
+        setTimeout(() => {
+          popup.innerHTML = ''
           setUnsafePanel()
-        }
-      }, 2000)
+        }, 2000)
+      }
     }
-  )
+  ) */
+}
+
+const setSafePanel = () => {
+  const popup = document.querySelector('#popup_urlcheck')
+  const overlay = document.querySelector('#overlay_urlcheck')
+  setBorderOver('#1fd56d')
+  setPopupColor('#f3fbed')
+  recoverScroll()
+  const passImage = document.createElement('img')
+  passImage.id = 'pass_img'
+  passImage.src = chrome.runtime.getURL('img/checkImg/yes.png')
+  popup.appendChild(passImage)
+  const paragraph0 = document.createElement('p')
+  paragraph0.id = 'checked_paragraph0_urlcheck'
+  paragraph0.appendChild(document.createTextNode('网站安全性检测通过'))
+
+  const checkedResultDiv = document.createElement('div')
+  checkedResultDiv.id = 'result_div_urlcheck'
+  checkedResultDiv.appendChild(passImage)
+  checkedResultDiv.appendChild(paragraph0)
+  popup.appendChild(checkedResultDiv)
+  setTimeout(() => {
+    document.body.removeChild(overlay)
+    tip()
+  }, 1000)
 }
 
 const setUnsafePanel = () => {
@@ -277,7 +299,7 @@ const setUnsafePanel = () => {
   const paragraph2 = document.createElement('p')
   paragraph2.id = 'checked_paragraph2_urlcheck'
   paragraph2.appendChild(
-    document.createTextNode('该网站疑似为诈骗网站 置信度: 88.8%')
+    document.createTextNode('该网站存在安全风险, 请谨慎访问')
   )
   popup.appendChild(paragraph2)
   // 调整popup的样式
