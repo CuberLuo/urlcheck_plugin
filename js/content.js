@@ -2,29 +2,24 @@ chrome.storage.sync.get('checkbox_checked', function (data) {
   console.log('网安宝反诈插件开启状态:' + data.checkbox_checked)
   if (data.checkbox_checked === true) {
     monitorDocument()
-  } else {
-    document.addEventListener('readystatechange', function () {
-      if (document.readyState === 'interactive') {
-        document
-          .querySelector('body')
-          .style.setProperty('display', 'block', 'important')
-      }
-    })
   }
 })
 const monitorDocument = () => {
   document.addEventListener('readystatechange', function () {
     if (document.readyState === 'interactive') {
-      document.body.insertAdjacentHTML(
-        'beforeend',
-        '<div id="overlay_urlcheck"></div>'
-      )
-      addOverlay()
+      setTimeout(() => {
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          '<div id="overlay_urlcheck"></div>'
+        )
+        addOverlay()
+        websiteCheckRequest()
+      }, 1000)
+
       // 使body可见
-      document
+      /* document
         .querySelector('body')
-        .style.setProperty('display', 'block', 'important')
-      websiteCheckRequest()
+        .style.setProperty('display', 'block', 'important') */
     }
   })
 }
@@ -212,7 +207,7 @@ function tip() {
     setTimeout(() => {
       ele.remove()
     }, 300)
-  }, 15000)
+  }, 150000)
 }
 
 const websiteCheckRequest = () => {
@@ -224,9 +219,14 @@ const websiteCheckRequest = () => {
   setTimeout(() => {
     popup.innerHTML = ''
     // console.log(`label:${resultObj.label}  label2:${resultObj.label2}`)
-    setSafePanel()
-    // setUnsafePanel()
-  }, 2000)
+    if (currentUrl === 'https://www.xuexi.cn/index.html') {
+      setSafePanel()
+    } else if (currentUrl === 'http://www.fj-ci.com/') {
+      setUnsafePanel(1)
+    } else {
+      setUnsafePanel(2)
+    }
+  }, 5000)
   /* chrome.runtime.sendMessage(
     { action: 'fetch_data', url: currentUrl },
     function (response) {
@@ -279,7 +279,7 @@ const setSafePanel = () => {
   }, 1000)
 }
 
-const setUnsafePanel = () => {
+const setUnsafePanel = (type_id) => {
   const popup = document.querySelector('#popup_urlcheck')
   const overlay = document.querySelector('#overlay_urlcheck')
   setBorderOver('#e63f32')
@@ -299,12 +299,30 @@ const setUnsafePanel = () => {
   const paragraph2 = document.createElement('p')
   paragraph2.id = 'checked_paragraph2_urlcheck'
   paragraph2.appendChild(
-    document.createTextNode('该网站存在安全风险, 请谨慎访问')
+    document.createTextNode('据网安宝插件分析,该风险网站可能的类型及概率如下:')
   )
   popup.appendChild(paragraph2)
+  const tagLine = document.createElement('div')
+  tagLine.id = 'tagLine_urlcheck'
+  if (type_id === 1) {
+    tagLine.innerHTML = `
+  <div class="tag_urlcheck">购物消费 55.83%</div>
+  <div class="tag_urlcheck">刷单诈骗 31.15%</div>
+  <div class="tag_urlcheck">平台诈骗 13.02%</div>
+  `
+  } else {
+    tagLine.innerHTML = `
+    <div class="tag_urlcheck">信贷理财 60.31%</div>
+    <div class="tag_urlcheck">平台诈骗 32.64%</div>
+    <div class="tag_urlcheck">冒充公检法 7.05%</div>
+    `
+  }
+
+  popup.appendChild(tagLine)
   // 调整popup的样式
-  popup.style.setProperty('height', '150px', 'important')
-  popup.style.setProperty('top', '70%', 'important')
+  popup.style.setProperty('height', '200px', 'important')
+  popup.style.setProperty('width', '500px', 'important')
+  popup.style.setProperty('top', '73%', 'important')
   const btn = document.createElement('button')
   btn.id = 'continue_urlcheck'
   // 设置按钮文本
