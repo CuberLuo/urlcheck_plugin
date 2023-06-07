@@ -1,0 +1,7 @@
+{
+  "name": "com.runpython.model",
+  "description": "Run native python model",
+  "path": "model.bat",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://ehfnddefbhdoilofhpbhhkelncnndfab/"]
+}

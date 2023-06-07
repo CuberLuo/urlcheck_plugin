@@ -54,6 +54,8 @@ $(document).ready(function () {
   })
 
   $('#help-button').click((e) => {
-    alert('help...')
+    alert(
+      '为守护您的网络安全,您可以创建密码以开启网安宝反诈插件,网安宝将实时为您拦截风险网站!'
+    )
   })
 })

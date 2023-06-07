@@ -15,11 +15,6 @@ const monitorDocument = () => {
         addOverlay()
         websiteCheckRequest()
       }, 1000)
-
-      // 使body可见
-      /* document
-        .querySelector('body')
-        .style.setProperty('display', 'block', 'important') */
     }
   })
 }
@@ -216,31 +211,7 @@ const websiteCheckRequest = () => {
   const popup = document.querySelector('#popup_urlcheck')
   // const overlay = document.querySelector('#overlay_urlcheck')
   // 发送消息到 background.js 文件
-  if (
-    currentUrl === 'https://www.xuexi.cn/index.html' ||
-    currentUrl === 'https://www.baidu.com/'
-  ) {
-    setTimeout(() => {
-      popup.innerHTML = ''
-      setSafePanel()
-    }, 300)
-  } else if (currentUrl === 'http://www.fj-ci.com/') {
-    setTimeout(() => {
-      popup.innerHTML = ''
-      setUnsafePanel(1)
-    }, 6000)
-  } else if (currentUrl === 'http://www.yudepawn.com/') {
-    setTimeout(() => {
-      popup.innerHTML = ''
-      setUnsafePanel(2)
-    }, 8000)
-  } else {
-    setTimeout(() => {
-      popup.innerHTML = ''
-      setSafePanel()
-    }, 500)
-  }
-  /* chrome.runtime.sendMessage(
+  chrome.runtime.sendMessage(
     { action: 'fetch_data', url: currentUrl },
     function (response) {
       // console.log(response)
@@ -250,26 +221,29 @@ const websiteCheckRequest = () => {
         console.log(resultObj)
         setTimeout(() => {
           popup.innerHTML = ''
-          console.log(`label:${resultObj.label}  label2:${resultObj.label2}`)
-          if (resultObj.label === 0 && resultObj.label2 === 0) {
+          console.log(
+            `labelList:${resultObj.labelList}  probList:${resultObj.probList}`
+          )
+          // 通过解构赋值获取resultObj中的值
+          const { labelList, probList } = resultObj
+          if (resultObj.safe === 1) {
             setSafePanel()
           } else {
-            setUnsafePanel()
+            setUnsafePanel(labelList, probList)
           }
         }, 2000)
       } else {
         setTimeout(() => {
           popup.innerHTML = ''
-          setUnsafePanel()
+          setNetErrorPanel()
         }, 2000)
       }
     }
-  ) */
+  )
 }
 
 const setSafePanel = () => {
   const popup = document.querySelector('#popup_urlcheck')
-  const overlay = document.querySelector('#overlay_urlcheck')
   setBorderOver('#1fd56d')
   setPopupColor('#f3fbed')
   recoverScroll()
@@ -287,14 +261,36 @@ const setSafePanel = () => {
   checkedResultDiv.appendChild(paragraph0)
   popup.appendChild(checkedResultDiv)
   setTimeout(() => {
-    document.body.removeChild(overlay)
+    removeOverlay()
     tip()
   }, 1000)
 }
 
-const setUnsafePanel = (type_id) => {
+const setNetErrorPanel = () => {
   const popup = document.querySelector('#popup_urlcheck')
-  const overlay = document.querySelector('#overlay_urlcheck')
+  setBorderOver('#e63f32')
+  setPopupColor('#ffefeb')
+  recoverScroll()
+  const failImage = document.createElement('img')
+  failImage.id = 'fail_img'
+  failImage.src = chrome.runtime.getURL('img/checkImg/no.png')
+  popup.appendChild(failImage)
+  const paragraph0 = document.createElement('p')
+  paragraph0.id = 'checked_paragraph0_urlcheck'
+  paragraph0.appendChild(document.createTextNode('网络请求失败'))
+
+  const checkedResultDiv = document.createElement('div')
+  checkedResultDiv.id = 'result_div_urlcheck'
+  checkedResultDiv.appendChild(failImage)
+  checkedResultDiv.appendChild(paragraph0)
+  popup.appendChild(checkedResultDiv)
+  setTimeout(() => {
+    removeOverlay()
+  }, 1000)
+}
+
+const setUnsafePanel = (labelList, probList) => {
+  const popup = document.querySelector('#popup_urlcheck')
   setBorderOver('#e63f32')
   setPopupColor('#ffefeb')
   const failImage = document.createElement('img')
@@ -310,27 +306,28 @@ const setUnsafePanel = (type_id) => {
   checkedResultDiv.appendChild(paragraph1)
   checkedResultDiv.style.setProperty('margin-bottom', '15px', 'important')
   popup.appendChild(checkedResultDiv)
-  /*const paragraph2 = document.createElement('p')
-  paragraph2.id = 'checked_paragraph2_urlcheck'
-  paragraph2.appendChild(
-    document.createTextNode('据网安宝插件分析,该风险网站可能的类型及概率如下:')
-  )
-  popup.appendChild(paragraph2) */
   const tagLine = document.createElement('div')
   tagLine.id = 'tagLine_urlcheck'
-  if (type_id === 1) {
-    tagLine.innerHTML = `
-  <div class="tag_urlcheck">购物消费 55.83%</div>
-  <div class="tag_urlcheck">刷单诈骗 31.15%</div>
-  <div class="tag_urlcheck">平台诈骗 13.02%</div>
-  `
-  } else {
-    tagLine.innerHTML = `
-    <div class="tag_urlcheck">信贷理财 60.31%</div>
-    <div class="tag_urlcheck">平台诈骗 32.64%</div>
-    <div class="tag_urlcheck">冒充公检法 7.05%</div>
-    `
+  const unsafeLabels = {
+    1: '购物消费',
+    2: '婚恋交友',
+    3: '假冒身份',
+    4: '钓鱼网站',
+    5: '冒充公检法',
+    6: '平台诈骗',
+    7: '招聘兼职',
+    8: '杀猪盘',
+    9: '博彩赌博',
+    10: '信贷理财',
+    11: '刷单诈骗',
+    12: '中奖诈骗'
   }
+  const unsafeLabelList = labelList.map((num) => unsafeLabels[num])
+  tagLine.innerHTML = `
+    <div class="tag_urlcheck">${unsafeLabelList[0]} ${probList[0]}</div>
+    <div class="tag_urlcheck">${unsafeLabelList[1]} ${probList[1]}</div>
+    <div class="tag_urlcheck">${unsafeLabelList[2]} ${probList[2]}</div>
+    `
 
   popup.appendChild(tagLine)
   // 调整popup的样式
@@ -366,13 +363,20 @@ const setUnsafePanel = (type_id) => {
   }, 1000)
 
   btn.addEventListener('click', function () {
-    document.body.removeChild(overlay)
+    removeOverlay()
     recoverScroll()
     clearInterval(intervalId) //继续访问则不再倒计时
     tip()
   })
 }
 
+//移除遮罩
+const removeOverlay = () => {
+  const overlay = document.querySelector('#overlay_urlcheck')
+  document.body.removeChild(overlay)
+}
+
+// 设置加载环的颜色
 const setBorderOver = (color) => {
   const container = document.querySelector('.container_urlcheck')
   // 移除 animation 属性
@@ -384,12 +388,14 @@ const setBorderOver = (color) => {
   container.style.background = 'none'
 }
 
+// 设置面板的颜色
 const setPopupColor = (color) => {
   const popup = document.querySelector('#popup_urlcheck')
   popup.style.color = '#2b3947'
   popup.style.backgroundColor = color
 }
 
+// 禁止页面滚动
 const forbidScroll = () => {
   window.addEventListener(
     'touchmove',
@@ -401,6 +407,7 @@ const forbidScroll = () => {
   document.body.style.overflow = 'hidden'
 }
 
+// 恢复页面滚动
 const recoverScroll = () => {
   window.removeEventListener('touchmove', function (e) {
     e.preventDefault()
