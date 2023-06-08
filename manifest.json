@@ -48,5 +48,5 @@
     "service_worker": "background.js"
   },
 
-  "permissions": ["storage", "nativeMessaging"]
+  "permissions": ["storage"]
 }
