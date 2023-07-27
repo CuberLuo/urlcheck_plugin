@@ -73,7 +73,8 @@
 #checked_paragraph2_urlcheck,
 #continue_urlcheck,
 #tagLine_urlcheck,
-#paragraph_time_urlcheck {
+#paragraph_time_urlcheck,
+#recommendLine_urlcheck {
   align-self: center;
   font-family: Arial, sans-serif !important;
   font-weight: bold !important;
@@ -117,4 +118,131 @@
   margin-bottom: 15px;
   margin-right: 5px;
   line-height: 1 !important;
+}
+
+#recommendLine_urlcheck {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.intention_btn_urlcheck {
+  width: 120px !important;
+  height: 32px !important;
+  /* background-color: #f0f9eb !important;
+  color: #2fc9ad !important;
+  border: 1px solid #b3e19d !important; */
+  background-color: #ecf5ff !important;
+  color: #4fa5ff !important;
+  border: 1px solid #a0cfff !important;
+  border-radius: 4px !important;
+  font-size: 20px !important;
+  margin-right: 8px !important;
+}
+.intention_btn_urlcheck:hover {
+  cursor: pointer !important;
+  /* background-color: #43e97b !important;
+  color: #f9fcff !important; */
+  background-color: #409eff !important;
+  color: #f9fcff !important;
+}
+#queryLabel_urlcheck {
+  font-size: 20px !important;
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mask_urlcheck {
+  position: relative;
+}
+
+.mask_urlcheck::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.5); /* 面板遮罩颜色和透明度 */
+}
+
+#loadingSvg_urlcheck {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  animation: infinite-rotation_urlcheck 2s linear infinite;
+  width: 150px;
+  height: 150px;
+  z-index: 2147483647;
+}
+
+/* 定义一直循环播放的旋转动画 */
+@keyframes infinite-rotation_urlcheck {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.urllink_urlcheck {
+  color: #4288f1 !important;
+  font-size: 18px !important;
+}
+
+.recommendurl_urlcheck {
+  margin: 5px;
+}
+
+.recommendUnit_urlcheck {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 300px;
+  height: 228.16px;
+  opacity: 0;
+  transition: transform 3s, opacity 3s;
+}
+.recommendWebsiteImg_urlcheck {
+  pointer-events: auto !important;
+  max-width: 300px;
+}
+.recommendWebsiteImg_urlcheck:hover {
+  cursor: pointer !important;
+}
+.recommendUnit0_urlcheck,
+.recommendUnit1_urlcheck,
+.recommendUnit2_urlcheck,
+.recommendUnit3_urlcheck {
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%,0%) scale(0.1);
+}
+
+#arrowCanvas_urlcheck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 2147483650;
+  opacity: 0;
+}
+
+.websiteNameBtn_urlcheck {
+  margin-top: 6px;
+  padding: 4px 12px 4px 12px;
+  border: 2px solid #a0cfff;
+  border-radius: 5px;
+  background-color: #ecf5ff;
+  max-height: 52px;
+  font-size: 30px !important;
+  font-weight: bold !important;
+  color: #409eff !important;
+}
+
+.websiteNameBtn_urlcheck:hover {
+  cursor: pointer !important;
 }

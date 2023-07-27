@@ -38,7 +38,8 @@
         "img/feedback/dislike.svg",
         "img/feedback/like_activate.svg",
         "img/feedback/dislike_activate.svg",
-        "img/feedback/close.svg"
+        "img/feedback/close.svg",
+        "img/loading.svg"
       ],
       "matches": ["<all_urls>"]
     }

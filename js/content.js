@@ -205,11 +205,11 @@ function tip() {
   }, 15000)
 }
 
+var currentUrl = ''
 const websiteCheckRequest = () => {
-  var currentUrl = window.location.href
+  currentUrl = window.location.href
   console.log('当前网址 ' + currentUrl)
   const popup = document.querySelector('#popup_urlcheck')
-  // const overlay = document.querySelector('#overlay_urlcheck')
   // 发送消息到 background.js 文件
   chrome.runtime.sendMessage(
     { action: 'fetch_data', url: currentUrl },
@@ -225,11 +225,11 @@ const websiteCheckRequest = () => {
             `labelList:${resultObj.labelList}  probList:${resultObj.probList}`
           )
           // 通过解构赋值获取resultObj中的值
-          const { labelList, probList } = resultObj
+          const { labelList, probList, intentionLabels } = resultObj
           if (resultObj.safe === 1) {
             setSafePanel()
           } else {
-            setUnsafePanel(labelList, probList)
+            setUnsafePanel(labelList, probList, intentionLabels)
           }
         }, 2000)
       } else {
@@ -289,9 +289,11 @@ const setNetErrorPanel = () => {
   }, 1000)
 }
 
-const setUnsafePanel = (labelList, probList) => {
+let isIntervalPaused = false
+const setUnsafePanel = (labelList, probList, intentionLabels) => {
   const popup = document.querySelector('#popup_urlcheck')
   setBorderOver('#e63f32')
+  /* #ffffe0 亮黄色 */
   setPopupColor('#ffefeb')
   const failImage = document.createElement('img')
   failImage.id = 'fail_img'
@@ -331,9 +333,9 @@ const setUnsafePanel = (labelList, probList) => {
 
   popup.appendChild(tagLine)
   // 调整popup的样式
-  popup.style.setProperty('height', '200px', 'important')
-  popup.style.setProperty('width', '650px', 'important')
-  popup.style.setProperty('top', '73%', 'important')
+  popup.style.setProperty('height', '250px', 'important')
+  popup.style.setProperty('width', '700px', 'important')
+  popup.style.setProperty('top', '75%', 'important')
 
   const btn = document.createElement('button')
   btn.id = 'continue_urlcheck'
@@ -343,21 +345,25 @@ const setUnsafePanel = (labelList, probList) => {
 
   const paragraph_time = document.createElement('p')
   paragraph_time.id = 'paragraph_time_urlcheck'
-  let remainingTime = 10
-  const time_text = document.createTextNode('10秒后返回上一页或关闭标签页')
+  let remainingTime = 300
+  const time_text = document.createTextNode(
+    `${remainingTime}秒后返回上一页或关闭标签页`
+  )
   paragraph_time.appendChild(time_text)
   popup.appendChild(paragraph_time)
   const intervalId = setInterval(() => {
-    remainingTime--
-    time_text.textContent = `${remainingTime}秒后返回上一页或关闭标签页`
+    if (!isIntervalPaused) {
+      remainingTime--
+      time_text.textContent = `${remainingTime}秒后返回上一页或关闭标签页`
 
-    if (remainingTime === 0) {
-      clearInterval(intervalId)
-      // 返回上一页或关闭标签页
-      if (history.length > 1) {
-        history.back()
-      } else {
-        window.close()
+      if (remainingTime === 0) {
+        clearInterval(intervalId)
+        // 返回上一页或关闭标签页
+        if (history.length > 1) {
+          history.back()
+        } else {
+          window.close()
+        }
       }
     }
   }, 1000)
@@ -368,8 +374,263 @@ const setUnsafePanel = (labelList, probList) => {
     clearInterval(intervalId) //继续访问则不再倒计时
     tip()
   })
+
+  const recommendLine = document.createElement('div')
+  recommendLine.id = 'recommendLine_urlcheck'
+  recommendLine.innerHTML = `
+    <span id="queryLabel_urlcheck">您可能在寻找：</span>
+  `
+  for (let i = 0; i < intentionLabels.length; i++) {
+    const button = document.createElement('button')
+    button.className = 'intention_btn_urlcheck'
+    button.innerHTML = intentionLabels[i]
+    button.onclick = function () {
+      isIntervalPaused = true //倒计时暂停
+      addPanelMask()
+      recommendWebsiteRequest(currentUrl, intentionLabels[i])
+    }
+    recommendLine.appendChild(button)
+  }
+  popup.appendChild(recommendLine)
 }
 
+const addPanelMask = () => {
+  const popup = document.querySelector('#popup_urlcheck')
+  popup.classList.add('mask_urlcheck')
+  const loadingSvg = document.createElement('img')
+  loadingSvg.id = 'loadingSvg_urlcheck'
+  loadingSvg.src = chrome.runtime.getURL('img/loading.svg')
+  popup.appendChild(loadingSvg)
+}
+const removePanelMask = () => {
+  const popup = document.querySelector('#popup_urlcheck')
+  popup.classList.remove('mask_urlcheck')
+  const loadingSvg = document.querySelector('#loadingSvg_urlcheck')
+  if (loadingSvg) {
+    popup.removeChild(loadingSvg)
+  }
+}
+
+const recommendWebsiteRequest = (url, label) => {
+  chrome.runtime.sendMessage(
+    { action: 'fetch_recommendation', url: url, label: label },
+    function (response) {
+      if (response.success === true) {
+        resultObj = response.data.data
+        const { recommendUrlList, recommendUrlNameList, urlImageList } =
+          resultObj
+        console.log(recommendUrlList)
+        console.log(recommendUrlNameList)
+        console.log(urlImageList)
+        setTimeout(() => {
+          removePanelMask()
+          isIntervalPaused = false
+          const recommendLine = document.getElementById(
+            'recommendLine_urlcheck'
+          )
+          recommendLine.innerHTML = ''
+          const tableElement = document.createElement('table')
+          tableElement.classList.add('recommendTable')
+          for (let i = 0; i < recommendUrlList.length; i++) {
+            if (i % 2 === 0) {
+              const trElement = document.createElement('tr')
+              for (let j = 0; j < 2; j++) {
+                const tdElement = document.createElement('td')
+                const linkElement = document.createElement('a')
+                linkElement.href = recommendUrlList[i + j]
+                linkElement.textContent = `${i + j + 1}. ${
+                  recommendUrlList[i + j]
+                }`
+                linkElement.classList.add(
+                  'urllink_urlcheck',
+                  'recommendurl_urlcheck'
+                )
+                // 将链接元素添加到单元格中
+                tdElement.appendChild(linkElement)
+                // 将单元格添加到行中
+                trElement.appendChild(tdElement)
+              }
+              tableElement.appendChild(trElement)
+            }
+          }
+          recommendLine.appendChild(tableElement)
+          addArrow()
+          addRecommendContent(
+            recommendUrlList,
+            recommendUrlNameList,
+            urlImageList
+          )
+        }, 1500)
+      } else {
+        removePanelMask()
+      }
+    }
+  )
+}
+
+const addRecommendContent = (
+  recommendUrlList,
+  recommendUrlNameList,
+  urlImageList
+) => {
+  const overlay = document.querySelector('#overlay_urlcheck')
+  for (let i = 0; i < 4; i++) {
+    const recommendUnit = document.createElement('div')
+    recommendUnit.classList.add('recommendUnit_urlcheck')
+    recommendUnit.classList.add(`recommendUnit${i}_urlcheck`)
+    // 推荐网址的快照
+    const websiteImg = document.createElement('img')
+    websiteImg.classList.add('recommendWebsiteImg_urlcheck')
+    websiteImg.classList.add(`recommendWebsiteImg${i}_urlcheck`)
+    websiteImg.src = urlImageList[i]
+    websiteImg.addEventListener('click', () => {
+      window.location.href = recommendUrlList[i]
+    })
+    const websiteNameBtn = document.createElement('button')
+    websiteNameBtn.classList.add('websiteNameBtn_urlcheck')
+    // 推荐网址的名称
+    websiteNameBtn.textContent = recommendUrlNameList[i]
+    websiteNameBtn.addEventListener('click', () => {
+      window.location.href = recommendUrlList[i]
+    })
+    recommendUnit.appendChild(websiteImg)
+    recommendUnit.appendChild(websiteNameBtn)
+    overlay.appendChild(recommendUnit)
+    const arrowCanvas = document.getElementById('arrowCanvas_urlcheck')
+    let canvasOpacity=0
+    setTimeout(() => {//0.1s后再将recommendUnit的不透明度设置为100%防止原有的css属性还未注入
+      if(i==0){
+        recommendUnit.style.transform = 'translate(-230%, -240%) scale(1)';
+      }else if(i==1){
+        recommendUnit.style.transform = 'translate(130%, -240%) scale(1)';
+      }else if(i==2){
+        recommendUnit.style.transform = 'translate(-230%, -35%) scale(1)';
+      }else if(i==3){
+        recommendUnit.style.transform = 'translate(130%, -35%) scale(1)';
+      }
+      recommendUnit.style.opacity='1'
+
+      let timer = setInterval(() => {
+        if (canvasOpacity >= 1) {
+          clearInterval(timer);
+        } else {
+          canvasOpacity += 0.1; // 每次增加的透明度值
+          arrowCanvas.style.opacity = canvasOpacity;
+        }//总共3s从不透明度0到1
+      }, 300); // 每隔300毫秒改变一次透明度
+    }, 100);
+  }
+}
+
+const addArrow = () => {
+  const overlay = document.querySelector('#overlay_urlcheck')
+  const arrowCanvas = document.createElement('canvas')
+  arrowCanvas.id = 'arrowCanvas_urlcheck'
+  arrowCanvas.width = window.innerWidth
+  arrowCanvas.height = window.innerHeight
+  const context = arrowCanvas.getContext('2d')
+  context.strokeStyle = '#fedd00'
+  context.lineWidth = 3
+  /* 第一个折线箭头 */
+  let startPointX = 530
+  let startPointY = 692
+  let middlePointX = startPointX
+  let middlePointY = 220
+  let endPointX = 320
+  let endPointY = middlePointY
+  // 垂直方向的线
+  context.moveTo(startPointX, startPointY)
+  context.lineTo(middlePointX, middlePointY)
+  // 水平方向的线
+  context.lineTo(endPointX, endPointY)
+  context.stroke()
+  // 绘制箭头
+  context.save() // 保存当前状态
+  context.translate(endPointX, endPointY)
+  context.beginPath()
+  context.moveTo(20, -10)
+  context.lineTo(0, 0)
+  context.lineTo(20, 10)
+  context.stroke()
+
+  /* 第二个折线箭头 */
+  startPointX = 910
+  startPointY = 692
+  middlePointX = startPointX
+  middlePointY = 220
+  endPointX = 1200
+  endPointY = middlePointY
+  context.restore() // 恢复到原点
+  // 垂直方向的线
+  context.moveTo(startPointX, startPointY)
+  context.lineTo(middlePointX, middlePointY)
+  // 水平方向的线
+  context.lineTo(endPointX, endPointY)
+  context.stroke()
+  // 绘制箭头
+  context.save() // 保存当前状态
+  context.translate(endPointX, endPointY)
+  context.beginPath()
+  context.moveTo(-20, -10)
+  context.lineTo(0, 0)
+  context.lineTo(-20, 10)
+  context.stroke()
+
+  /* 第三个折线箭头 */
+  startPointX = 530
+  startPointY = 715
+  let middlePoint1X = startPointX
+  let middlePoint1Y = 780
+  let middlePoint2X = 180
+  let middlePoint2Y = middlePoint1Y
+  endPointX = middlePoint2X
+  endPointY = 730
+  context.restore() // 恢复到原点
+  // 垂直方向的线
+  context.moveTo(startPointX, startPointY)
+  context.lineTo(middlePoint1X, middlePoint1Y)
+  // 水平方向的线
+  context.lineTo(middlePoint2X, middlePoint2Y)
+  // 垂直方向的线
+  context.lineTo(endPointX, endPointY)
+  context.stroke()
+  // 绘制箭头
+  context.save() // 保存当前状态
+  context.translate(endPointX, endPointY)
+  context.beginPath()
+  context.moveTo(-10, 20)
+  context.lineTo(0, 0)
+  context.lineTo(10, 20)
+  context.stroke()
+
+  /* 第四个折线箭头 */
+  startPointX = 880
+  startPointY = 715
+  middlePoint1X = startPointX
+  middlePoint1Y = 780
+  middlePoint2X = 1260
+  middlePoint2Y = middlePoint1Y
+  endPointX = middlePoint2X
+  endPointY = 730
+  context.restore() // 恢复到原点
+  // 垂直方向的线
+  context.moveTo(startPointX, startPointY)
+  context.lineTo(middlePoint1X, middlePoint1Y)
+  // 水平方向的线
+  context.lineTo(middlePoint2X, middlePoint2Y)
+  // 垂直方向的线
+  context.lineTo(endPointX, endPointY)
+  context.stroke()
+  // 绘制箭头
+  context.save() // 保存当前状态
+  context.translate(endPointX, endPointY)
+  context.beginPath()
+  context.moveTo(-10, 20)
+  context.lineTo(0, 0)
+  context.lineTo(10, 20)
+  context.stroke()
+  overlay.appendChild(arrowCanvas)
+}
 //移除遮罩
 const removeOverlay = () => {
   const overlay = document.querySelector('#overlay_urlcheck')

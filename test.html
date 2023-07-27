@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: pink;
+        margin: 0;
+        padding: 0;
+      }
+      #mycanvas {
+        border: 2px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="mycanvas"></canvas>
+    <script>
+      const canvas = document.getElementById('mycanvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      var context = canvas.getContext('2d')
+      context.moveTo(10, 10)
+      context.lineTo(1000, 500)
+      context.stroke()
+
+      // 绘制箭头
+      var angle = Math.atan2(500 - 10, 1000 - 10) //直线的斜率
+      context.translate(1000, 500) //将原点从默认位置（0, 0）平移到了 (1000, 500)
+      context.rotate(angle)
+      context.beginPath()
+      context.moveTo(-10, -5)
+      context.lineTo(0, 0)
+      context.lineTo(-10, 5)
+      context.stroke()
+    </script>
+  </body>
+</html>

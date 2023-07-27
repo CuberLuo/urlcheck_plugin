@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #movingImage {
+            position: fixed;
+            bottom: 0;
+            right: 50%;
+            opacity: 0;
+            transform: translate(50%, 0%) scale(0);
+            transition: transform 3s, opacity 3s;
+        }
+    </style>
+</head>
+<body>
+    <img id="movingImage" src="https://726f-rocky-cloud-9gbyxv799b209f8b-1312554960.tcb.qcloud.la/video-website/01-bilibili.jpg?sign=9084cd2e70ee43843f1d219d8da567f8&t=1689492128">
+    
+    <script>
+        window.onload = function() {
+            var image = document.getElementById('movingImage');
+            image.style.transform = 'translate(0%, -120%) scale(1)';
+            image.style.opacity = '1';
+        }
+    </script>
+</body>
+</html>
